@@ -37,5 +37,18 @@ namespace Business.Concrete
                 Console.WriteLine("Added: " + car.Id + " " + car.Description + " " + car.ModelYear);
             }
         }
+
+        public void DeleteCar(int carId)
+        {
+            if (_carDal.GetAll().Any(c => c.Id == carId))
+            {
+                _carDal.Delete(_carDal.GetByCarId(carId));
+                Console.WriteLine("Deleted: " + carId);
+            }
+            else
+            {
+                Console.WriteLine("Not deleted: " + carId);
+            }
+        }
     }
 }

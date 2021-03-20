@@ -52,5 +52,10 @@ namespace DataAccess.Concrete.InMemory
             carToUpdate.DailyPrice = car.DailyPrice;
             carToUpdate.Description = car.Description;
         }
+
+        public Car GetByCarId(int carId)
+        {
+            return _cars.SingleOrDefault(c => c.Id == carId);
+        }
     }
 }
