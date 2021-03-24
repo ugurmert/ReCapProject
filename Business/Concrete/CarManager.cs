@@ -21,33 +21,25 @@ namespace Business.Concrete
             return _carDal.GetAll();
         }
 
-        public void AddCar(Car car)
+        public List<Car> GetCarsByBrandId(int id)
         {
-            //9'dan fazla araç kayıtlıysa veya 2018 yılından eski model yılına sahipse eklemek istemiyoruz.
-
-            int numberOfCar = _carDal.GetAll().Count + 1;
-
-            if (numberOfCar > 9 || car.ModelYear < 2018)
-            {
-                Console.WriteLine("Not added: " + car.Id + " " + car.Description + " " + car.ModelYear);
-            }
-            else
-            {
-                _carDal.Add(car);
-                Console.WriteLine("Added: " + car.Id + " " + car.Description + " " + car.ModelYear);
-            }
+            return _carDal.GetAll(c => c.BrandId == id);
         }
 
-        public void DeleteCar(int carId)
+        public List<Car> GetCarsByColorId(int id)
         {
-            if (_carDal.GetAll().Any(c => c.Id == carId))
+            return _carDal.GetAll(c => c.ColorId == id);
+        }
+
+        public void Add(Car car)
+        {
+            if (car.Description.Length >= 2 && car.DailyPrice > 0)
             {
-                _carDal.Delete(_carDal.GetByCarId(carId));
-                Console.WriteLine("Deleted: " + carId);
+                _carDal.Add(car);
             }
             else
             {
-                Console.WriteLine("Not deleted: " + carId);
+                Console.WriteLine("Araba ismi minimum 2 karakter ve araba günlük fiyatı 0'dan büyük olmalıdır.");
             }
         }
     }

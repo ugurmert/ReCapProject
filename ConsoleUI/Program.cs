@@ -1,4 +1,5 @@
 ﻿using Business.Concrete;
+using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using System;
@@ -9,25 +10,14 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            CarManager carManager = new CarManager(new InMemoryCarDal());
+            CarManager carManager = new CarManager(new EfCarDal());
 
-            foreach (var car in carManager.GetAll())
-            {
-                Console.WriteLine(car.Id + "- " + car.Description + " " + car.ModelYear + " " + car.DailyPrice);
-            }
-
-            carManager.AddCar(new Car { Id = 8, BrandId = 4, ColorId = 1, ModelYear = 2020, DailyPrice = 450.5, Description = "Fiat Egea" });
-            carManager.AddCar(new Car { Id = 9, BrandId = 4, ColorId = 1, ModelYear = 2016, DailyPrice = 450.5, Description = "Fiat Egea" });
-            carManager.AddCar(new Car { Id = 10, BrandId = 5, ColorId = 2, ModelYear = 2019, DailyPrice = 350.5, Description = "Opel Corsa" });
-            carManager.AddCar(new Car { Id = 11, BrandId = 3, ColorId = 4, ModelYear = 2015, DailyPrice = 450.5, Description = "Hyundai I10" });
-
-            foreach (var car in carManager.GetAll())
-            {
-                Console.WriteLine(car.Id + "- " + car.Description + " " + car.ModelYear + " " + car.DailyPrice);
-            }
-
-            carManager.DeleteCar(2);
-            carManager.DeleteCar(15);
+            carManager.Add(new Car { Id = 1, BrandId = 1, ColorId = 1, ModelYear = 2020, DailyPrice = 450.5, Description = "Egea" });
+            carManager.Add(new Car { Id = 2, BrandId = 1, ColorId = 1, ModelYear = 2016, DailyPrice = 378, Description = "Egea" });
+            carManager.Add(new Car { Id = 3, BrandId = 2, ColorId = 2, ModelYear = 2019, DailyPrice = 390, Description = "Corsa" });
+            carManager.Add(new Car { Id = 4, BrandId = 3, ColorId = 3, ModelYear = 2015, DailyPrice = 355.5, Description = "I10" });
+            carManager.Add(new Car { Id = 5, BrandId = 4, ColorId = 2, ModelYear = 2019, DailyPrice = 430.5, Description = "A" });
+            carManager.Add(new Car { Id = 6, BrandId = 3, ColorId = 1, ModelYear = 2018, DailyPrice = 0, Description = "I10" });
 
             foreach (var car in carManager.GetAll())
             {
