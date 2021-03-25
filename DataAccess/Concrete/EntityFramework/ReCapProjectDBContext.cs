@@ -13,7 +13,7 @@ namespace DataAccess.Concrete.EntityFramework
             //Server --> Server adresi "(localdb)\mssqllocaldb"
             //Database --> Veritabanı adı "ReCapProjectDB"
             //Trusted_Connection=true --> Şifre gerektirmeden bağlanmayı etkin kılmak içik kullandık.
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=ReCapProjectDB;Trusted_Connection=true");
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=ReCapProjectDB;Trusted_Connection=true");
         }
 
         //DbSet<> --> class'ı veritabanındaki tabloya bağlamak için kullanıyoruz.
