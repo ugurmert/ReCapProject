@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Entities.DTOs;
 
 namespace Business.Concrete
 {
@@ -16,14 +17,53 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
+        public void Add(Car car)
+        {
+            var result = _carDal.GetAll().Any(c => c.Id == car.Id);
+            if (result == false)
+            {
+                if (car.DailyPrice > 0)
+                {
+                    _carDal.Add(car);
+                    Console.WriteLine("Added");
+                }
+                else
+                {
+                    Console.WriteLine("Hata! Araba günlük fiyatı 0'dan büyük olmalıdır.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Hata! Eklemeye çalıştığınız araba mevcut");
+            }
+        }
+
+        public void Delete(Car car)
+        {
+            var result = _carDal.GetAll().Any(c => c.Id == car.Id);
+            if (result)
+            {
+                _carDal.Delete(car);
+            }
+            else
+            {
+                Console.WriteLine("Hata! Silmek istediğiniz araba mevcut değil");
+            }
+        }
+
         public List<Car> GetAll()
         {
             return _carDal.GetAll();
         }
 
-        public List<Car> GetCarsByBrandId(int id)
+        public Car GetById(int carId)
         {
-            return _carDal.GetAll(c => c.BrandId == id);
+            return _carDal.Get(c => c.Id == carId);
+        }
+
+        public List<CarDetailDto> GetCarDetails()
+        {
+            return _carDal.GetCarDetails();
         }
 
         public List<Car> GetCarsByColorId(int id)
@@ -31,16 +71,29 @@ namespace Business.Concrete
             return _carDal.GetAll(c => c.ColorId == id);
         }
 
-        public void Add(Car car)
+        public List<Car> GetCarsByModelId(int id)
         {
-            if (car.Description.Length >= 2 && car.DailyPrice > 0)
+            return _carDal.GetAll(c => c.ModelId == id);
+        }
+
+        public void Update(Car car)
+        {
+            var result = _carDal.GetAll().Any(c => c.Id == car.Id);
+            if (result)
             {
-                _carDal.Add(car);
+                _carDal.Update(car);
             }
             else
             {
-                Console.WriteLine("Araba ismi minimum 2 karakter ve araba günlük fiyatı 0'dan büyük olmalıdır.");
+                Console.WriteLine("Hata! Güncellemek istediğiniz araba mevcut değil");
             }
         }
     }
 }
+
+/* Düzeltilmesi Gerekenler:
+ * 
+ * - GetById metoduna mevcut olmayan Id girilmesi
+ * - Update ve Delete metodların mevcut olmayan Id ile işlem yapamaması
+ * 
+ */
