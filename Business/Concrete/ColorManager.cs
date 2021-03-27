@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Core.Utilities.Results;
+using Business.Constants;
 
 namespace Business.Concrete
 {
@@ -17,7 +19,7 @@ namespace Business.Concrete
             _colorDal = colorDal;
         }
 
-        public void Add(Color color)
+        public IResult Add(Color color)
         {
             var result = _colorDal.GetAll().Any(c => c.Id == color.Id);
             var result2 = _colorDal.GetAll().Any(c => c.Name.ToLower() == color.Name.ToLower());
@@ -28,57 +30,59 @@ namespace Business.Concrete
                     if (color.Name.Length >= 2)
                     {
                         _colorDal.Add(color);
-                        Console.WriteLine("Added!");
+                        return new SuccessResult(Messages.ColorAdded);
                     }
                     else
                     {
-                        Console.WriteLine("Hata! Araba rengi minimum 2 karakter olmalı.");
+                        return new ErrorResult(Messages.ColorNameInvalid);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Hata! Eklemeye çalıştığınız renk adı mevcut");
+                    return new ErrorResult(Messages.ColorNameAvailable);
                 }
             }
             else
             {
-                Console.WriteLine("Hata! Eklemeye çalıştığınız renk id'si mevcut");
+                return new ErrorResult(Messages.ColorIdAvailable);
             }
         }
 
-        public void Delete(Color color)
+        public IResult Delete(Color color)
         {
             var result = _colorDal.GetAll().Any(c => c.Id == color.Id);
-            if (result)
+            if (result == true)
             {
                 _colorDal.Delete(color);
+                return new SuccessResult(Messages.ColorDeleted);
             }
             else
             {
-                Console.WriteLine("Hata! Silmek istediğiniz renk mevcut değil");
+                return new ErrorResult(Messages.ColorNotFound);
             }
         }
 
-        public List<Color> GetAll()
+        public IDataResult<List<Color>> GetAll()
         {
-            return _colorDal.GetAll();
+            return new SuccessDataResult<List<Color>>(_colorDal.GetAll());
         }
 
-        public Color GetById(int colorId)
+        public IDataResult<Color> GetById(int colorId)
         {
-            return _colorDal.Get(c => c.Id == colorId);
+            return new SuccessDataResult<Color>(_colorDal.Get(c => c.Id == colorId));
         }
 
-        public void Update(Color color)
+        public IResult Update(Color color)
         {
             var result = _colorDal.GetAll().Any(c => c.Id == color.Id);
             if (result)
             {
                 _colorDal.Update(color);
+                return new SuccessResult(Messages.ColorUpdated);
             }
             else
             {
-                Console.WriteLine("Hata! Güncellemek istediğiniz renk mevcut değil");
+                return new ErrorResult(Messages.ColorNotFound);
             }
         }
     }

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Entities.DTOs;
+using Core.Utilities.Results;
+using Business.Constants;
 
 namespace Business.Concrete
 {
@@ -17,7 +19,7 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        public void Add(Car car)
+        public IResult Add(Car car)
         {
             var result = _carDal.GetAll().Any(c => c.Id == car.Id);
             if (result == false)
@@ -25,67 +27,69 @@ namespace Business.Concrete
                 if (car.DailyPrice > 0)
                 {
                     _carDal.Add(car);
-                    Console.WriteLine("Added");
+                    return new SuccessResult(Messages.CarAdded);
                 }
                 else
                 {
-                    Console.WriteLine("Hata! Araba günlük fiyatı 0'dan büyük olmalıdır.");
+                    return new ErrorResult(Messages.CarDailyPriceInvalid);
                 }
             }
             else
             {
-                Console.WriteLine("Hata! Eklemeye çalıştığınız araba mevcut");
+                return new ErrorResult(Messages.CarIdAvailable);
             }
         }
 
-        public void Delete(Car car)
+        public IResult Delete(Car car)
         {
             var result = _carDal.GetAll().Any(c => c.Id == car.Id);
             if (result)
             {
                 _carDal.Delete(car);
+                return new SuccessResult(Messages.CarDeleted);
             }
             else
             {
-                Console.WriteLine("Hata! Silmek istediğiniz araba mevcut değil");
+                return new ErrorResult(Messages.CarNotFound);
             }
         }
 
-        public List<Car> GetAll()
+        public IDataResult<List<Car>> GetAll()
         {
-            return _carDal.GetAll();
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll());
         }
 
-        public Car GetById(int carId)
+        public IDataResult<Car> GetById(int carId)
         {
-            return _carDal.Get(c => c.Id == carId);
+            return new SuccessDataResult<Car>(_carDal.Get(c => c.Id == carId));
         }
 
-        public List<CarDetailDto> GetCarDetails()
+        public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
-            return _carDal.GetCarDetails();
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());
         }
 
-        public List<Car> GetCarsByColorId(int id)
+        public IDataResult<List<Car>> GetCarsByColorId(int id)
         {
-            return _carDal.GetAll(c => c.ColorId == id);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.ColorId == id));
         }
 
-        public List<Car> GetCarsByModelId(int id)
+        public IDataResult<List<Car>> GetCarsByModelId(int id)
         {
-            return _carDal.GetAll(c => c.ModelId == id);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.ModelId == id));
         }
 
-        public void Update(Car car)
+        public IResult Update(Car car)
         {
             var result = _carDal.GetAll().Any(c => c.Id == car.Id);
             if (result)
             {
                 _carDal.Update(car);
+                return new SuccessResult(Messages.CarUpdated);
             }
             else
             {
-                Console.WriteLine("Hata! Güncellemek istediğiniz araba mevcut değil");
+                return new ErrorResult(Messages.CarNotFound);
             }
         }
     }

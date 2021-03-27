@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -16,7 +18,7 @@ namespace Business.Concrete
         {
             _brandDal = brandDal;
         }
-        public void Add(Brand brand)
+        public IResult Add(Brand brand)
         {
             var result = _brandDal.GetAll().Any(b => b.Id == brand.Id);
             var result2 = _brandDal.GetAll().Any(b => b.Name.ToLower() == brand.Name.ToLower());
@@ -27,57 +29,59 @@ namespace Business.Concrete
                     if (brand.Name.Length >= 2)
                     {
                         _brandDal.Add(brand);
-                        Console.WriteLine("Added!");
+                        return new SuccessResult(Messages.BrandAdded);
                     }
                     else
                     {
-                        Console.WriteLine("Hata! Araba markasının adı minimum 2 karakter olmalı.");
+                        return new ErrorResult(Messages.BrandNameInvalid);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Hata! Eklemeye çalıştığınız marka adı mevcut");
+                    return new ErrorResult(Messages.BrandNameAvailable);
                 }
             }
             else
             {
-                Console.WriteLine("Hata! Eklemeye çalıştığınız marka id'si mevcut");
+                return new ErrorResult(Messages.BrandIdAvailable);
             }
         }
 
-        public void Delete(Brand brand)
+        public IResult Delete(Brand brand)
         {
             var result = _brandDal.GetAll().Any(b => b.Id == brand.Id);
             if (result)
             {
                 _brandDal.Delete(brand);
+                return new SuccessResult(Messages.BrandDeleted);
             }
             else
             {
-                Console.WriteLine("Hata! Silmek istediğiniz marka mevcut değil");
+                return new ErrorResult(Messages.BrandNotFound);
             }
         }
 
-        public List<Brand> GetAll()
+        public IDataResult<List<Brand>> GetAll()
         {
-            return _brandDal.GetAll();
+            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll());
         }
 
-        public Brand GetById(int brandId)
+        public IDataResult<Brand> GetById(int brandId)
         {
-            return _brandDal.Get(b => b.Id == brandId);
+            return new SuccessDataResult<Brand>(_brandDal.Get(b => b.Id == brandId));
         }
 
-        public void Update(Brand brand)
+        public IResult Update(Brand brand)
         {
             var result = _brandDal.GetAll().Any(b => b.Id == brand.Id);
             if (result)
             {
                 _brandDal.Update(brand);
+                return new SuccessResult(Messages.BrandUpdated);
             }
             else
             {
-                Console.WriteLine("Hata! Güncellemek istediğiniz marka mevcut değil");
+                return new ErrorResult(Messages.BrandNotFound);
             }
         }
     }

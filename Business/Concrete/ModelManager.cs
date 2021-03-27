@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -16,7 +18,7 @@ namespace Business.Concrete
         {
             _modelDal = modelDal;
         }
-        public void Add(Model model)
+        public IResult Add(Model model)
         {
             var result = _modelDal.GetAll().Any(m => m.Id == model.Id);
             var result2 = _modelDal.GetAll().Any(m => m.Name.ToLower() == model.Name.ToLower() && m.BrandId == model.BrandId);
@@ -27,62 +29,64 @@ namespace Business.Concrete
                     if (model.Name.Length >= 2)
                     {
                         _modelDal.Add(model);
-                        Console.WriteLine("Added!");
+                        return new SuccessResult(Messages.ModelAdded);
                     }
                     else
                     {
-                        Console.WriteLine("Hata! Araba modelinin adı minimum 2 karakter olmalı.");
+                        return new ErrorResult(Messages.ModelNameInvalid);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Hata! Marka ve model bilgilerini kontrol edin");
+                    return new ErrorResult(Messages.ModelNameAvailable);
                 }
             }
             else
             {
-                Console.WriteLine("Hata! Eklemeye çalıştığınız model id'si mevcut");
+                return new ErrorResult(Messages.ModelIdAvailable);
             }
         }
 
-        public void Delete(Model model)
+        public IResult Delete(Model model)
         {
             var result = _modelDal.GetAll().Any(m => m.Id == model.Id);
             if (result)
             {
                 _modelDal.Delete(model);
+                return new SuccessResult(Messages.ModelDeleted);
             }
             else
             {
-                Console.WriteLine("Hata! Silmek istediğiniz model mevcut değil");
+                return new ErrorResult(Messages.ModelNotFound);
             }
         }
 
-        public List<Model> GetAll()
+        public IDataResult<List<Model>> GetAll()
         {
-            return _modelDal.GetAll();
+            return new SuccessDataResult<List<Model>>(_modelDal.GetAll());
         }
 
-        public Model GetById(int modelId)
+        public IDataResult<Model> GetById(int modelId)
         {
-            return _modelDal.Get(m => m.Id == modelId);
+            return new SuccessDataResult<Model>(_modelDal.Get(m => m.Id == modelId));
         }
 
-        public List<Model> GetModelsByBrandId(int id)
+        public IDataResult<List<Model>> GetModelsByBrandId(int id)
         {
-            return _modelDal.GetAll(m => m.BrandId == id);
+            return new SuccessDataResult<List<Model>>(_modelDal.GetAll(m => m.BrandId == id));
         }
 
-        public void Update(Model model)
+        public IResult Update(Model model)
         {
             var result = _modelDal.GetAll().Any(m => m.Id == model.Id);
             if (result)
             {
                 _modelDal.Update(model);
+                return new SuccessResult(Messages.ModelUpdated);
             }
             else
             {
-                Console.WriteLine("Hata! Güncellemek istediğiniz model mevcut değil");
+                return new ErrorResult(Messages.ModelNotFound);
             }
         }
     }
