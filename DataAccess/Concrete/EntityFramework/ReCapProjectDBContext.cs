@@ -10,9 +10,6 @@ namespace DataAccess.Concrete.EntityFramework
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //Server --> Server adresi "(localdb)\mssqllocaldb"
-            //Database --> Veritabanı adı "ReCapProjectDB"
-            //Trusted_Connection=true --> Şifre gerektirmeden bağlanmayı etkin kılmak içik kullandık.
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=ReCapProjectDB;Trusted_Connection=true");
         }
 
@@ -21,5 +18,8 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Car> Cars { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<Model> Models { get; set; }
+        public DbSet<Rental> Rentals { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Customer> Customers { get; set; }
     }
 }

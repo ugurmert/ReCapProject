@@ -7,7 +7,7 @@ using System.Text;
 namespace Core.DataAccess
 {
     //class --> Referans tip olmalı
-    //IEntity --> IEntity veya IEntity imğlement eden nesne olabilir
+    //IEntity --> IEntity veya IEntity implement eden nesne olabilir
     //new() --> new'lenebilir olmalıdır. Soyut sınıfları kabul etmemek için kullanırız.
     public interface IEntityRepository<T> where T : class, IEntity, new()
     {

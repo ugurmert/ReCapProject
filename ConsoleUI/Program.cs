@@ -10,13 +10,30 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            ColorTest();
+            //ColorTest();
 
-            BrandTest();
+            //BrandTest();
 
-            ModelTest();
+            //ModelTest();
 
-            Cartest();
+            //Cartest();
+
+            //RentalTest();
+        }
+
+        private static void RentalTest()
+        {
+            UserManager userManager = new UserManager(new EfUserDal());
+            userManager.Add(new User { Id = 1, FirstName = "Uğur", LastName = "Mert", Email = "ugur@gmail.com", Password = "12345678910" });
+            userManager.Add(new User { Id = 2, FirstName = "Burak", LastName = "Seçginer", Email = "burak@gmail.com", Password = "12345678911" });
+
+            CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
+            customerManager.Add(new Customer { Id = 1, UserId = 2, CompanyName = "B Şirketi" });
+            customerManager.Add(new Customer { Id = 2, UserId = 1, CompanyName = "U Şirketi" });
+
+            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+            var result = rentalManager.Add(new Rental { Id = 1, CarId = 1, CustomerId = 1, RentDate = new DateTime(2021, 2, 10), ReturnDate = new DateTime(2021, 2, 15) });
+            Console.WriteLine(result.Message);
         }
 
         private static void Cartest()
