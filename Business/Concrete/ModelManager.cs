@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -20,10 +21,10 @@ namespace Business.Concrete
         {
             _modelDal = modelDal;
         }
+
+        [ValidationAspect(typeof(ModelValidator))]
         public IResult Add(Model model)
         {
-            ValidationTool.Validate(new ModelValidator(), model);
-
             _modelDal.Add(model);
 
             return new SuccessResult(Messages.ModelAdded);
