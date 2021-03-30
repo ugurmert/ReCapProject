@@ -7,6 +7,8 @@ using System.Text;
 using System.Linq;
 using Core.Utilities.Results;
 using Business.Constants;
+using Core.CrossCuttingConcerns.Validation;
+using Business.ValidationRules.FluentValidation;
 
 namespace Business.Concrete
 {
@@ -21,31 +23,11 @@ namespace Business.Concrete
 
         public IResult Add(Color color)
         {
-            var result = _colorDal.GetAll().Any(c => c.Id == color.Id);
-            var result2 = _colorDal.GetAll().Any(c => c.Name.ToLower() == color.Name.ToLower());
-            if (result == false)
-            {
-                if (result2 == false)
-                {
-                    if (color.Name.Length >= 2)
-                    {
-                        _colorDal.Add(color);
-                        return new SuccessResult(Messages.ColorAdded);
-                    }
-                    else
-                    {
-                        return new ErrorResult(Messages.ColorNameInvalid);
-                    }
-                }
-                else
-                {
-                    return new ErrorResult(Messages.ColorNameAvailable);
-                }
-            }
-            else
-            {
-                return new ErrorResult(Messages.ColorIdAvailable);
-            }
+            ValidationTool.Validate(new ColorValidator(), color);
+
+            _colorDal.Add(color);
+
+            return new SuccessResult(Messages.ColorAdded);
         }
 
         public IResult Delete(Color color)

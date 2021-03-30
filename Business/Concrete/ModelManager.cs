@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -20,31 +22,11 @@ namespace Business.Concrete
         }
         public IResult Add(Model model)
         {
-            var result = _modelDal.GetAll().Any(m => m.Id == model.Id);
-            var result2 = _modelDal.GetAll().Any(m => m.Name.ToLower() == model.Name.ToLower() && m.BrandId == model.BrandId);
-            if (result == false)
-            {
-                if (result2 == false)
-                {
-                    if (model.Name.Length >= 2)
-                    {
-                        _modelDal.Add(model);
-                        return new SuccessResult(Messages.ModelAdded);
-                    }
-                    else
-                    {
-                        return new ErrorResult(Messages.ModelNameInvalid);
-                    }
-                }
-                else
-                {
-                    return new ErrorResult(Messages.ModelNameAvailable);
-                }
-            }
-            else
-            {
-                return new ErrorResult(Messages.ModelIdAvailable);
-            }
+            ValidationTool.Validate(new ModelValidator(), model);
+
+            _modelDal.Add(model);
+
+            return new SuccessResult(Messages.ModelAdded);
         }
 
         public IResult Delete(Model model)
