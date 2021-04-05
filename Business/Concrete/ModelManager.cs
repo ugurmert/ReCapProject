@@ -32,16 +32,8 @@ namespace Business.Concrete
 
         public IResult Delete(Model model)
         {
-            var result = _modelDal.GetAll().Any(m => m.Id == model.Id);
-            if (result)
-            {
-                _modelDal.Delete(model);
-                return new SuccessResult(Messages.ModelDeleted);
-            }
-            else
-            {
-                return new ErrorResult(Messages.ModelNotFound);
-            }
+            _modelDal.Delete(model);
+            return new SuccessResult(Messages.ModelDeleted);
         }
 
         public IDataResult<List<Model>> GetAll()
@@ -61,25 +53,8 @@ namespace Business.Concrete
 
         public IResult Update(Model model)
         {
-            var result = _modelDal.GetAll().Any(m => m.Id == model.Id);
-            if (result)
-            {
-                _modelDal.Update(model);
-                return new SuccessResult(Messages.ModelUpdated);
-            }
-            else
-            {
-                return new ErrorResult(Messages.ModelNotFound);
-            }
+            _modelDal.Update(model);
+            return new SuccessResult(Messages.ModelUpdated);
         }
     }
 }
-
-/* Düzeltilmesi Gerekenler:
- * 
- * - GetById metoduna mevcut olmayan Id girilmesi
- * - Update ve Delete metodların mevcut olmayan Id ile işlem yapamaması
- * - Add metodunda model adının boşluk karakteri ile girilmesi problemi
- * - Hali hazırda Cars tablosunda kullanılan ModelId'ye sahip modellerde silme işlemi yapılamamsı
- * 
- */

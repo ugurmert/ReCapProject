@@ -1,4 +1,5 @@
 ﻿using Business.Concrete;
+using Core.Entities.Concrete;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
@@ -20,19 +21,19 @@ namespace ConsoleUI
 
             //RentalTest();
         }
-
+        
         private static void RentalTest()
         {
             UserManager userManager = new UserManager(new EfUserDal());
-            userManager.Add(new User { Id = 1, FirstName = "Uğur", LastName = "Mert", Email = "ugur@gmail.com", Password = "12345678910" });
-            userManager.Add(new User { Id = 2, FirstName = "Burak", LastName = "Seçginer", Email = "burak@gmail.com", Password = "12345678911" });
+            userManager.Add(new User { FirstName = "Uğur", LastName = "Mert", Email = "ugur@gmail.com" });
+            userManager.Add(new User { FirstName = "Burak", LastName = "Seçginer", Email = "burak@gmail.com"});
 
             CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
-            customerManager.Add(new Customer { Id = 1, UserId = 2, CompanyName = "B Şirketi" });
-            customerManager.Add(new Customer { Id = 2, UserId = 1, CompanyName = "U Şirketi" });
+            customerManager.Add(new Customer { UserId = 2, CompanyName = "B Şirketi" });
+            customerManager.Add(new Customer { UserId = 1, CompanyName = "U Şirketi" });
 
             RentalManager rentalManager = new RentalManager(new EfRentalDal());
-            var result = rentalManager.Add(new Rental { Id = 1, CarId = 1, CustomerId = 1, RentDate = new DateTime(2021, 2, 10), ReturnDate = new DateTime(2021, 2, 15) });
+            var result = rentalManager.Add(new Rental { CarId = 1, CustomerId = 1, RentDate = new DateTime(2021, 2, 10), ReturnDate = new DateTime(2021, 2, 15) });
             Console.WriteLine(result.Message);
         }
 
@@ -40,13 +41,13 @@ namespace ConsoleUI
         {
             CarManager carManager = new CarManager(new EfCarDal());
 
-            carManager.Add(new Car { Id = 1, ModelId = 1, ColorId = 1, ModelYear = 2019, DailyPrice = 445.28, Description = "Audi A6 Kırmızı" });
-            carManager.Add(new Car { Id = 2, ModelId = 2, ColorId = 2, ModelYear = 2019, DailyPrice = 438.50, Description = "Mercedes A200 Beyaz" });
-            carManager.Add(new Car { Id = 3, ModelId = 1, ColorId = 2, ModelYear = 2021, DailyPrice = 475.32, Description = "Audi A6 Beyaz" });
-            carManager.Add(new Car { Id = 4, ModelId = 4, ColorId = 1, ModelYear = 2020, DailyPrice = 448.97, Description = "Fiat Linea Kırmızı" });
-            carManager.Add(new Car { Id = 5, ModelId = 4, ColorId = 2, ModelYear = 2018, DailyPrice = 344.10, Description = "Fiat Linea Beyaz" });
-            carManager.Add(new Car { Id = 6, ModelId = 5, ColorId = 2, ModelYear = 2021, DailyPrice = 481.76, Description = "Renault Megane Beyaz" });
-            carManager.Add(new Car { Id = 7, ModelId = 6, ColorId = 2, ModelYear = 2020, DailyPrice = 459.51, Description = "Renault Clio Beyaz" });
+            carManager.Add(new Car { ModelId = 1, ColorId = 1, ModelYear = 2019, DailyPrice = 445.28, Description = "Audi A6 Kırmızı" });
+            carManager.Add(new Car { ModelId = 2, ColorId = 2, ModelYear = 2019, DailyPrice = 438.50, Description = "Mercedes A200 Beyaz" });
+            carManager.Add(new Car { ModelId = 1, ColorId = 2, ModelYear = 2021, DailyPrice = 475.32, Description = "Audi A6 Beyaz" });
+            carManager.Add(new Car { ModelId = 4, ColorId = 1, ModelYear = 2020, DailyPrice = 448.97, Description = "Fiat Linea Kırmızı" });
+            carManager.Add(new Car { ModelId = 4, ColorId = 2, ModelYear = 2018, DailyPrice = 344.10, Description = "Fiat Linea Beyaz" });
+            carManager.Add(new Car { ModelId = 5, ColorId = 2, ModelYear = 2021, DailyPrice = 481.76, Description = "Renault Megane Beyaz" });
+            carManager.Add(new Car { ModelId = 6, ColorId = 2, ModelYear = 2020, DailyPrice = 459.51, Description = "Renault Clio Beyaz" });
 
             Console.WriteLine("\n--- Ekleme sonrası detaylı araba listesi ---\n");
 
@@ -246,5 +247,6 @@ namespace ConsoleUI
                 Console.WriteLine("id: {0} Renk: {1}", color.Id, color.Name);
             }
         }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿using Core.Entities;
+﻿using Core.Entities.Abstract;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,12 +14,11 @@ namespace Core.DataAccess.EntityFramework
     {
         public void Add(TEntity entity)
         {
-            //using ile context'i, blok bitince Garbage Collector ile bellekten hemen atmasını istiyoruz.
             using (TContext context = new TContext())
             {
-                var addedEntity = context.Entry(entity);    //Referansı yakala
-                addedEntity.State = EntityState.Added;      //Ekleme durumu olarak set et
-                context.SaveChanges();                      //Şimdi ekle
+                var addedEntity = context.Entry(entity);
+                addedEntity.State = EntityState.Added;
+                context.SaveChanges();
             }
         }
 
@@ -27,15 +26,14 @@ namespace Core.DataAccess.EntityFramework
         {
             using (TContext context = new TContext())
             {
-                var deletedEntity = context.Entry(entity);      //Referansı yakala
-                deletedEntity.State = EntityState.Deleted;      //Silme durumu olarak set et
-                context.SaveChanges();                          //Şimdi sil
+                var deletedEntity = context.Entry(entity);
+                deletedEntity.State = EntityState.Deleted;
+                context.SaveChanges();
             }
         }
 
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
         {
-            //Tek bir nesneyi getirmek
             using (TContext context = new TContext())
             {
                 return context.Set<TEntity>().SingleOrDefault(filter);
@@ -44,7 +42,6 @@ namespace Core.DataAccess.EntityFramework
 
         public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
         {
-            //Filtre yoksa tüm nesneleri, filtre varsa uygun nesneleri getirmek
             using (TContext context = new TContext())
             {
                 return filter == null ? context.Set<TEntity>().ToList() : context.Set<TEntity>().Where(filter).ToList();
@@ -55,9 +52,9 @@ namespace Core.DataAccess.EntityFramework
         {
             using (TContext context = new TContext())
             {
-                var updatedEntity = context.Entry(entity);      //Referansı yakala
-                updatedEntity.State = EntityState.Modified;     //Güncelleme durumu olarak set et
-                context.SaveChanges();                          //Şimdi güncelle
+                var updatedEntity = context.Entry(entity);
+                updatedEntity.State = EntityState.Modified;
+                context.SaveChanges();
             }
         }
     }

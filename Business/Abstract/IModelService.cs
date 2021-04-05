@@ -8,11 +8,11 @@ namespace Business.Abstract
 {
     public interface IModelService
     {
-        IDataResult<List<Model>> GetAll();
-        IDataResult<List<Model>> GetModelsByBrandId(int id);
-        IDataResult<Model> GetById(int modelId);
         IResult Add(Model model);
         IResult Delete(Model model);
         IResult Update(Model model);
+        IDataResult<Model> GetById(int id);
+        IDataResult<List<Model>> GetAll();
+        IDataResult<List<Model>> GetModelsByBrandId(int brandId);
     }
 }

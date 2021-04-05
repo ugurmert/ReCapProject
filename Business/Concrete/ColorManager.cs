@@ -1,15 +1,15 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using Core.Utilities.Results;
-using Business.Constants;
-using Core.CrossCuttingConcerns.Validation;
-using Business.ValidationRules.FluentValidation;
-using Core.Aspects.Autofac.Validation;
+using System.Text;
 
 namespace Business.Concrete
 {
@@ -32,16 +32,8 @@ namespace Business.Concrete
 
         public IResult Delete(Color color)
         {
-            var result = _colorDal.GetAll().Any(c => c.Id == color.Id);
-            if (result == true)
-            {
-                _colorDal.Delete(color);
-                return new SuccessResult(Messages.ColorDeleted);
-            }
-            else
-            {
-                return new ErrorResult(Messages.ColorNotFound);
-            }
+            _colorDal.Delete(color);
+            return new SuccessResult(Messages.ColorDeleted);
         }
 
         public IDataResult<List<Color>> GetAll()
@@ -56,25 +48,8 @@ namespace Business.Concrete
 
         public IResult Update(Color color)
         {
-            var result = _colorDal.GetAll().Any(c => c.Id == color.Id);
-            if (result)
-            {
-                _colorDal.Update(color);
-                return new SuccessResult(Messages.ColorUpdated);
-            }
-            else
-            {
-                return new ErrorResult(Messages.ColorNotFound);
-            }
+            _colorDal.Update(color);
+            return new SuccessResult(Messages.ColorUpdated);
         }
     }
 }
-
-/* Düzeltilmesi Gerekenler:
- * 
- * - GetById metoduna mevcut olmayan Id girilmesi
- * - Update ve Delete metodların mevcut olmayan Id ile işlem yapamaması
- * - Add metodunda renklerin adının boşluk karakteri ile girilmesi problemi
- * - Hali hazırda Cars tablosunda kullanılan ColorId'ye sahip renklerde silme işlemi yapılamamsı
- * 
- */

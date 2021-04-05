@@ -33,16 +33,8 @@ namespace Business.Concrete
 
         public IResult Delete(Rental rental)
         {
-            var result = _rentalDal.GetAll().Any(r => r.Id == rental.Id);
-            if (result == true)
-            {
-                _rentalDal.Delete(rental);
-                return new SuccessResult(Messages.RentalDeleted);
-            }
-            else
-            {
-                return new ErrorResult(Messages.RentalNotFound);
-            }
+            _rentalDal.Delete(rental);
+            return new SuccessResult(Messages.RentalDeleted);
         }
 
         public IDataResult<List<Rental>> GetAll()
@@ -72,16 +64,8 @@ namespace Business.Concrete
 
         public IResult Update(Rental rental)
         {
-            var result = _rentalDal.GetAll().Any(r => r.Id == rental.Id);
-            if (result == true)
-            {
-                _rentalDal.Update(rental);
-                return new SuccessResult(Messages.RentalUpdated);
-            }
-            else
-            {
-                return new ErrorResult(Messages.RentalNotFound);
-            }
+            _rentalDal.Update(rental);
+            return new SuccessResult(Messages.RentalUpdated);
         }
     }
 }

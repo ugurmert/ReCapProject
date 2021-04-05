@@ -2,7 +2,6 @@
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
-using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -32,16 +31,8 @@ namespace Business.Concrete
 
         public IResult Delete(Brand brand)
         {
-            var result = _brandDal.GetAll().Any(b => b.Id == brand.Id);
-            if (result)
-            {
-                _brandDal.Delete(brand);
-                return new SuccessResult(Messages.BrandDeleted);
-            }
-            else
-            {
-                return new ErrorResult(Messages.BrandNotFound);
-            }
+            _brandDal.Delete(brand);
+            return new SuccessResult(Messages.BrandDeleted);
         }
 
         public IDataResult<List<Brand>> GetAll()
@@ -56,25 +47,8 @@ namespace Business.Concrete
 
         public IResult Update(Brand brand)
         {
-            var result = _brandDal.GetAll().Any(b => b.Id == brand.Id);
-            if (result)
-            {
-                _brandDal.Update(brand);
-                return new SuccessResult(Messages.BrandUpdated);
-            }
-            else
-            {
-                return new ErrorResult(Messages.BrandNotFound);
-            }
+            _brandDal.Update(brand);
+            return new SuccessResult(Messages.BrandUpdated);
         }
     }
 }
-
-/* Düzeltilmesi Gerekenler:
- * 
- * - GetById metoduna mevcut olmayan Id girilmesi
- * - Update ve Delete metodların mevcut olmayan Id ile işlem yapamaması
- * - Add metodunda marka adının boşluk karakteri ile girilmesi problemi
- * - Hali hazırda Models tablosunda kullanılan BrandId'ye sahip markalarda silme işlemi yapılamamsı
- * 
- */

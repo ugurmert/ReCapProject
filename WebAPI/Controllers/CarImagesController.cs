@@ -7,23 +7,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebAPI.Properties
+namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class CarImagesController : ControllerBase
     {
-        IUserService _userService;
+        ICarImageService _carImageService;
 
-        public UsersController(IUserService userService)
+        public CarImagesController(ICarImageService carImageService)
         {
-            _userService = userService;
+            _carImageService = carImageService;
         }
 
         [HttpPost("add")]
-        public IActionResult Add(User user)
+        public IActionResult Add([FromForm(Name = ("Image"))] IFormFile file, [FromForm] CarImage carImage)
         {
-            var result = _userService.Add(user);
+            var result = _carImageService.Add(carImage, file);
             if (result.Success)
             {
                 return Ok(result);
@@ -32,9 +32,11 @@ namespace WebAPI.Properties
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(User user)
+        public IActionResult Delete([FromForm(Name = ("Id"))] int id)
         {
-            var result = _userService.Delete(user);
+            var carImage = _carImageService.GetById(id).Data;
+
+            var result = _carImageService.Delete(carImage);
             if (result.Success)
             {
                 return Ok(result);
@@ -43,9 +45,10 @@ namespace WebAPI.Properties
         }
 
         [HttpPost("update")]
-        public IActionResult Update(User user)
+        public IActionResult Update([FromForm(Name = ("Image"))] IFormFile file, [FromForm(Name = ("Id"))] int id)
         {
-            var result = _userService.Update(user);
+            var carImages = _carImageService.GetById(id).Data;
+            var result = _carImageService.Update(carImages, file);
             if (result.Success)
             {
                 return Ok(result);
@@ -56,7 +59,7 @@ namespace WebAPI.Properties
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            var result = _userService.GetAll();
+            var result = _carImageService.GetAll();
             if (result.Success)
             {
                 return Ok(result);
@@ -67,7 +70,7 @@ namespace WebAPI.Properties
         [HttpGet("getbyid")]
         public IActionResult GetById(int id)
         {
-            var result = _userService.GetById(id);
+            var result = _carImageService.GetById(id);
             if (result.Success)
             {
                 return Ok(result);
@@ -75,7 +78,15 @@ namespace WebAPI.Properties
             return BadRequest(result);
         }
 
-
-
+        [HttpGet("getcarimagesbycarid")]
+        public IActionResult GetCarImagesByCarId(int id)
+        {
+            var result = _carImageService.GetCarImagesByCarId(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
     }
 }
